@@ -2,6 +2,10 @@ import uvicorn
 from fastapi import FastAPI
 
 from api.hendlers import menu, submenu, dish
+from db.models import Base
+from db.session import engine
+
+Base.metadata.create_all(engine)
 
 app = FastAPI(title='Y_Lab')
 
@@ -22,4 +26,4 @@ app.include_router(
 )
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8000)
+    uvicorn.run(app, host='0.0.0.0', port=8000)
