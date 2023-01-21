@@ -4,7 +4,7 @@ services:
     container_name: "fastapi"
     image: api
     environment:
-      - DATABASE_URL=postgresql://db/postgres
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
     build:
       context: .
       dockerfile: Dockerfile
