@@ -2,9 +2,9 @@ import uuid
 
 from sqlalchemy import Column, String, Integer, ForeignKey, Float
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy.orm import relationship
 
-Base = declarative_base()
+from api.database import Base
 
 
 class Menu(Base):

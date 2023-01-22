@@ -6,10 +6,9 @@ from sqlalchemy.orm import Session
 from starlette import status
 from starlette.exceptions import HTTPException
 
-from db.session import get_db
-
+from api.database import get_db
 from api.schemas import DishSchemaBase, DishSchemaOut
-from db.models import Dish, Submenu, Menu
+from api.models import Dish, Submenu, Menu
 
 router = APIRouter()
 
