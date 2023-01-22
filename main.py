@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
 
-from api.hendlers import menu, submenu, dish
+from api.handlers import menu, submenu, dish
 
 
 app = FastAPI(title='Y_Lab')
