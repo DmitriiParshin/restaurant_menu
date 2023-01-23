@@ -1,19 +1,19 @@
 version: "3"
 services:
-#  api:
-#    container_name: "fastapi"
-#    image: api
-#    environment:
-#      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8000:8000"
-#    depends_on:
-#      - db
-#    networks:
-#      - custom
+  api:
+    container_name: "api"
+    image: api
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - custom
   db:
     container_name: "postgres"
     image: postgres:15.1-alpine
@@ -28,6 +28,23 @@ services:
       - custom
     volumes:
       - postgres-db:/var/lib/postgresql/data
+  test:
+    container_name: "test"
+    image: test
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    build:
+      context: .
+      dockerfile: tests/Dockerfile_test
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - custom
+    command: pytest
+    deploy:
+      replicas: 0
 networks:
   custom:
     driver: bridge

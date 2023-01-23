@@ -1,12 +1,21 @@
 import pytest
 
 from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from api.database import Session
+from api.database import Base
 from api.models import Menu, Submenu, Dish
+from config import DATABASE_URL
 from main import app
 
+
 HOST = "http://127.0.0.1:8000/api/v1/"
+
+
+test_engine = create_engine(DATABASE_URL)
+
+TestSession = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
 
 
 @pytest.fixture
@@ -17,20 +26,12 @@ def test_client():
 
 @pytest.fixture
 def test_session():
-    session = Session()
+    session = TestSession()
+    Base.metadata.create_all(test_engine)
     try:
         yield session
     finally:
         session.close()
-
-
-@pytest.fixture
-def test_rollback_db(test_session):
-    transaction = test_session.begin()
-    try:
-        yield test_session
-    finally:
-        transaction.rollback()
 
 
 def get_menu_obj(test_session):
@@ -43,6 +44,11 @@ def get_submenu_obj(test_session):
 
 def get_dish_obj(test_session):
     return test_session.query(Dish).first()
+
+
+def test_clean_table():
+    Base.metadata.drop_all(test_engine)
+    Base.metadata.create_all(test_engine)
 
 
 def test_empty_menus(test_client):

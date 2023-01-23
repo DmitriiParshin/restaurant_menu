@@ -1,6 +1,6 @@
-alembic==1.9.2
 envparse==0.2.0
 fastapi==0.89.1
+httpx==0.23.3
 psycopg2-binary==2.9.5
 pytest==7.2.1
 SQLAlchemy==1.4.46

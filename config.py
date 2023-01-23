@@ -10,5 +10,5 @@ DATABASE_URL = env.str(
 
 TEST_DATABASE_URL = env.str(
     'TEST_DATABASE_URL',
-    default='postgresql://postgres_test:postgres_test@0.0.0.0:5433/postgres_test'
+    default='postgresql://postgres:postgres@0.0.0.0:5433/postgres_test'
 )

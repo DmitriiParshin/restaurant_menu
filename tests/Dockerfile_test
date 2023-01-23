@@ -1,0 +1,13 @@
+FROM python:3.10-slim
+
+WORKDIR /tests/
+
+COPY requirements.txt /tests/
+
+RUN pip install -r requirements.txt
+
+COPY . /tests/
+
+EXPOSE 8000
+
+CMD ["python3", "main.py"]
