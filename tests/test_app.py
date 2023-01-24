@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from config import TEST_DATABASE_URL
+from config import DATABASE_URL
 from database.database import Base
 from database.models import Dish, Menu, Submenu
 
@@ -12,21 +12,20 @@ from main import app
 HOST = "http://127.0.0.1:8000/api/v1/"
 
 
-test_engine = create_engine(TEST_DATABASE_URL)
+test_engine = create_engine(DATABASE_URL)
 
 TestSession = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture
 def test_client():
     client = TestClient(app)
     yield client
 
 
-@pytest.fixture(scope="function", autouse=True)
+@pytest.fixture
 def test_session():
     session = TestSession()
-    Base.metadata.create_all(test_engine)
     try:
         yield session
     finally:
