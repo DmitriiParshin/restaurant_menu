@@ -9,7 +9,7 @@ from database.models import Dish, Menu, Submenu
 
 from main import app
 
-HOST = "http://localhost:8000/api/v1/"
+HOST = "http://127.0.0.1:8000/api/v1/"
 
 
 test_engine = create_engine(TEST_DATABASE_URL)

@@ -11,7 +11,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    command: "python3 main.py"
+#    command: "pytest"
     networks:
       - custom
   db:
@@ -22,8 +22,24 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    ports:
-      - "5432:5432"
+#    healthcheck:
+#      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 10s
+    networks:
+      - custom
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+  db_test:
+    container_name: "db_test"
+    image: postgres:15.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     networks:
       - custom
     volumes:
