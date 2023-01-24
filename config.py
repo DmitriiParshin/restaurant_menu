@@ -4,7 +4,7 @@ env = Env()
 
 DATABASE_URL = env.str(
     "DATABASE_URL",
-    default="postgresql://postgres:postgres@localhost:5432/postgres",
+    default="postgresql://postgres:postgres@0.0.0.0:5432/postgres",
 )
 
 TEST_DATABASE_URL = env.str(
