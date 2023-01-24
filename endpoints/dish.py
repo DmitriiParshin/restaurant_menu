@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import Dict, List
 from uuid import UUID
 
 from fastapi import APIRouter, Depends
@@ -6,22 +6,23 @@ from sqlalchemy.orm import Session
 from starlette import status
 from starlette.exceptions import HTTPException
 
-from api.database import get_db
-from api.schemas import DishSchemaBase, DishSchemaOut
-from api.models import Dish, Submenu, Menu
+from database.database import get_db
+from database.models import Dish, Menu, Submenu
+from database.schemas import DishSchemaBase, DishSchemaOut
 
 router = APIRouter()
 
 
-@router.get('/')
+@router.get("/")
 async def get(db: Session = Depends(get_db)) -> List[DishSchemaOut]:
     _dish = db.query(Dish).all()
     return _dish
 
 
-@router.post('/', status_code=status.HTTP_201_CREATED)
-def create(submenu_id: UUID, dish: DishSchemaBase,
-           db: Session = Depends(get_db)) -> DishSchemaOut:
+@router.post("/", status_code=status.HTTP_201_CREATED)
+def create(
+    submenu_id: UUID, dish: DishSchemaBase, db: Session = Depends(get_db)
+) -> DishSchemaOut:
     _dish = Dish(**dish.dict())
     _dish.submenu_id = submenu_id
     db.add(_dish)
@@ -38,33 +39,34 @@ def create(submenu_id: UUID, dish: DishSchemaBase,
     return _dish
 
 
-@router.get('/{id}')
-def get_by_id(id: UUID,
-              db: Session = Depends(get_db)) -> DishSchemaOut:
+@router.get("/{id}")
+def get_by_id(id: UUID, db: Session = Depends(get_db)) -> DishSchemaOut:
     _dish = db.query(Dish).filter(Dish.id == id).first()
     if not _dish:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail='dish not found')
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="dish not found"
+        )
     return _dish
 
 
-@router.patch('/{id}')
-def update(id: UUID, dish: DishSchemaBase,
-           db: Session = Depends(get_db)) -> DishSchemaOut:
+@router.patch("/{id}")
+def update(
+    id: UUID, dish: DishSchemaBase, db: Session = Depends(get_db)
+) -> DishSchemaOut:
     _dish = db.query(Dish).filter(Dish.id == id)
     db_dish = _dish.first()
     if not db_dish:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail='dish not found')
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="dish not found"
+        )
     _dish.update(dish.dict(exclude_unset=True))
     db.commit()
     db.refresh(db_dish)
     return db_dish
 
 
-@router.delete('/{id}')
-def delete(id: UUID,
-           db: Session = Depends(get_db)) -> Dict:
+@router.delete("/{id}")
+def delete(id: UUID, db: Session = Depends(get_db)) -> Dict:
     _dish = db.query(Dish).filter(Dish.id == id).first()
     db.delete(_dish)
     db.commit()
@@ -76,4 +78,4 @@ def delete(id: UUID,
     _menu.dishes_count -= 1
     db.commit()
     db.refresh(_menu)
-    return {'status': True, 'message': 'The dish has been deleted'}
+    return {"status": True, "message": "The dish has been deleted"}

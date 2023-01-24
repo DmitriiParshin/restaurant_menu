@@ -1,13 +1,13 @@
 FROM python:3.10-slim
 
-WORKDIR .
+RUN mkdir /app
 
-COPY requirements.txt .
+COPY requirements.txt /app/requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install -r /app/requirements.txt --no-cache-dir
 
-COPY . .
+COPY . /app
+
+WORKDIR /app
 
 EXPOSE 8000
-
-CMD ["python3", "main.py"]

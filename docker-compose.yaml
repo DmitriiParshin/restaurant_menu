@@ -1,21 +1,21 @@
-version: "3"
+version: "3.8"
+
 services:
   api:
     container_name: "api"
     image: api
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
       - "8000:8000"
     depends_on:
       - db
+    command: "python3 main.py"
     networks:
       - custom
   db:
-    container_name: "postgres"
+    container_name: "db"
     image: postgres:15.1-alpine
     restart: always
     environment:
@@ -28,25 +28,10 @@ services:
       - custom
     volumes:
       - postgres-db:/var/lib/postgresql/data
-  test:
-    container_name: "test"
-    image: test
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
-    build:
-      context: .
-      dockerfile: tests/Dockerfile_test
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    networks:
-      - custom
-    command: pytest
-    deploy:
-      replicas: 0
+
 networks:
   custom:
+    name: network_api_db
     driver: bridge
 volumes:
   postgres-db:
