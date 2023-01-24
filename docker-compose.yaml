@@ -22,9 +22,9 @@ services:
     volumes:
       - postgres-db:/var/lib/postgresql/data
 
-  api_test:
-    container_name: "api_test"
-    image: api_test
+  test:
+    container_name: "test"
+    image: test
     build: .
     depends_on:
       db_test:
