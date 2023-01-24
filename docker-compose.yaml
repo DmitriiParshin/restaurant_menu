@@ -22,9 +22,9 @@ services:
     volumes:
       - postgres-db:/var/lib/postgresql/data
 
-  test:
+  api_test:
     container_name: "api_test"
-    image: api
+    image: api_test
     build: .
     depends_on:
       db_test:
@@ -33,12 +33,12 @@ services:
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db_test:5432/postgres
     networks:
-      - test_network
+      - custom_test
     deploy:
       replicas: 0
 
   db_test:
-    container_name: "test_db"
+    container_name: "db_test"
     image: postgres:15.1-alpine
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
@@ -52,16 +52,16 @@ services:
     expose:
       - "5432"
     networks:
-      - test_network
+      - custom_test
     volumes:
-      - test_db:/var/lib/postgresql/data
+      - test-db:/var/lib/postgresql/data
 
 networks:
   custom:
     driver: bridge
-  test_network:
+  custom_test:
     driver: bridge
 
 volumes:
   postgres-db:
-  test_db:
+  test-db:
