@@ -37,6 +37,10 @@ REST API по работе с меню ресторана, все CRUD опер�
 
 `sudo docker-compose up --build -d`
 
+### Запуск базы данных и приложения для тестов
+
+`sudo docker-compose -f docker-compose_test up --build -d`
+
 ### Запуск тестов
 
-`sudo docker-compose run test`
+`sudo docker-compose -f docker-compose_test run test`
