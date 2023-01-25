@@ -1,8 +1,15 @@
-from envparse import Env
+from pydantic import BaseSettings
 
-env = Env()
 
-DATABASE_URL = env.str(
-    "DATABASE_URL",
-    default="postgresql://postgres:postgres@0.0.0.0:5432/postgres",
-)
+class Settings(BaseSettings):
+    DATABASE_PORT: int
+    POSTGRES_PASSWORD: str
+    POSTGRES_USER: str
+    POSTGRES_DB: str
+    POSTGRES_HOSTNAME: str
+
+    class Config:
+        env_file = "./.env"
+
+
+settings = Settings()
