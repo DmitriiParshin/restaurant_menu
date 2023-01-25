@@ -6,7 +6,6 @@ from sqlalchemy.orm import sessionmaker
 from config import DATABASE_URL
 from database.database import Base
 from database.models import Dish, Menu, Submenu
-
 from main import app
 
 HOST = "http://127.0.0.1:8000/api/v1/"
