@@ -1,67 +1,31 @@
 version: "3.8"
 
 services:
-  api:
-    container_name: "api"
-    image: api
+  web:
+    container_name: "web"
+    image: web
+    build: .
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
-    build: .
     ports:
       - "8000:8000"
     depends_on:
       - db
     networks:
-      - custom
+      - net
   db:
     container_name: "db"
     image: postgres:15.1-alpine
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
     restart: always
-    networks:
-      - custom
     volumes:
-      - postgres-db:/var/lib/postgresql/data
-
-  test:
-    container_name: "test"
-    image: test
-    build: .
-    depends_on:
-      db_test:
-        condition: service_healthy
-    command: "pytest"
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db_test:5432/postgres
+      - postgres:/var/lib/postgresql/data
     networks:
-      - custom_test
-    deploy:
-      replicas: 0
-
-  db_test:
-    container_name: "db_test"
-    image: postgres:15.1-alpine
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 1s
-      timeout: 5s
-      retries: 10
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
-    expose:
-      - "5432"
-    networks:
-      - custom_test
-    volumes:
-      - test-db:/var/lib/postgresql/data
-
-networks:
-  custom:
-    driver: bridge
-  custom_test:
-    driver: bridge
+      - net
 
 volumes:
-  postgres-db:
-  test-db:
+  postgres:
+networks:
+  net:
+    driver: bridge
